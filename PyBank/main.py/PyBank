@@ -1,0 +1,62 @@
+import csv
+
+# Initialize variables
+total_months = 0
+net_total = 0
+changes_in_profit = []
+greatest_increase = {"date": "", "amount": 0}
+greatest_decrease = {"date": "", "amount": 0}
+
+# Read the dataset 
+with open("/Users/paulsalgo/Downloads/Challenge 3 /PyBank/Resources/budget_data.csv", newline="") as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=",")
+
+    # Skip header
+    next(csvreader)
+
+    # Loop through data
+    for row in csvreader:
+        # Extract data from the row
+        date, profit_loss = row[0], int(row[1])
+
+        # Calculate total months and net total
+        total_months += 1
+        net_total += profit_loss
+
+        # Calculate changes in profit/loss and store them
+        if total_months == 1:
+            prev_profit_loss = profit_loss
+        else:
+            change = profit_loss - prev_profit_loss
+            changes_in_profit.append(change)
+            prev_profit_loss = profit_loss
+
+            # Check for greatest increase and decrease
+            if change > greatest_increase["amount"]:
+                greatest_increase["date"] = date
+                greatest_increase["amount"] = change
+            elif change < greatest_decrease["amount"]:
+                greatest_decrease["date"] = date
+                greatest_decrease["amount"] = change
+
+# Calculate the average change
+average_change = round(sum(changes_in_profit) / len(changes_in_profit), 2)
+
+# Print the results to the terminal
+print("Financial Analysis")
+print("----------------------------")
+print(f"Total Months: {total_months}")
+print(f"Total: ${net_total}")
+print(f"Average Change: ${average_change}")
+print(f"Greatest Increase in Profits: {greatest_increase['date']} (${greatest_increase['amount']})")
+print(f"Greatest Decrease in Profits: {greatest_decrease['date']} (${greatest_decrease['amount']})")
+
+# Export the results to a text file
+with open("financial_analysis.txt", "w") as output_file:
+    output_file.write("Financial Analysis\n")
+    output_file.write("----------------------------\n")
+    output_file.write(f"Total Months: {total_months}\n")
+    output_file.write(f"Total: ${net_total}\n")
+    output_file.write(f"Average Change: ${average_change}\n")
+    output_file.write(f"Greatest Increase in Profits: {greatest_increase['date']} (${greatest_increase['amount']})\n")
+    output_file.write(f"Greatest Decrease in Profits: {greatest_decrease['date']} (${greatest_decrease['amount']})\n")
