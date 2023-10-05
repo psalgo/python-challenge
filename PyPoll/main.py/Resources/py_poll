@@ -1,0 +1,61 @@
+import csv
+
+# Step 2: Read the CSV file
+with open("/Users/paulsalgo/Downloads/Challenge 3 /PyPoll/Resources/election_data.csv", newline="") as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=",")
+
+    # Step 3: Initialize variables
+    total_votes = 0
+    candidate_votes = {}
+
+    # Skip header
+    next(csvreader)
+
+    # Step 4: Loop through data
+    for row in csvreader:
+        # Extract candidate name
+        candidate = row[2]
+
+        # Count total votes
+        total_votes += 1
+
+        # Step 5: Update candidate vote count
+        if candidate in candidate_votes:
+            candidate_votes[candidate] += 1
+        else:
+            candidate_votes[candidate] = 1
+
+# Step 6: Determine the winner
+winner = max(candidate_votes, key=candidate_votes.get)
+
+# Step 7: Print the election results to the terminal
+print("Election Results")
+print("-------------------------")
+print(f"Total Votes: {total_votes}")
+print("-------------------------")
+
+# Step 5 (continued): Calculate and print candidate statistics
+for candidate, votes in candidate_votes.items():
+    percentage = (votes / total_votes) * 100
+    print(f"{candidate}: {percentage:.3f}% ({votes})")
+
+# Step 8: Print the winner
+print("-------------------------")
+print(f"Winner: {winner}")
+print("-------------------------")
+
+# Export the results to a text file
+with open("election_results.txt", "w") as output_file:
+    output_file.write("Election Results\n")
+    output_file.write("-------------------------\n")
+    output_file.write(f"Total Votes: {total_votes}\n")
+    output_file.write("-------------------------\n")
+    
+    # Calculate and write candidate statistics to the file
+    for candidate, votes in candidate_votes.items():
+        percentage = (votes / total_votes) * 100
+        output_file.write(f"{candidate}: {percentage:.3f}% ({votes})\n")
+
+    output_file.write("-------------------------\n")
+    output_file.write(f"Winner: {winner}\n")
+    output_file.write("-------------------------\n")
